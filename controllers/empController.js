@@ -2,14 +2,16 @@ var Employees = require("../model/employees")
 const { MongoClient } = require("mongodb")
 
 const uri = "mongodb://127.0.0.1:27017/"
+const db_name = "vale_poc"
+const collection_name = "employee_access"
 
 const mongoClient = new MongoClient(uri, { useUnifiedTopology: true })
 
 exports.getAll = async (request, response, next) => {
     try {
         var client = await mongoClient.connect()
-        var dbName = client.db("dxcDB")
-        var colName = dbName.collection("emp")
+        var dbName = client.db(db_name)
+        var colName = dbName.collection(collection_name)
 
         var cursor = colName.find()
 
@@ -30,8 +32,8 @@ exports.getAll = async (request, response, next) => {
 exports.getEmployee = async (request, response, next) => {
     try {
         var client = await mongoClient.connect()
-        var dbName = client.db("dxcDB")
-        var colName = dbName.collection("emp")
+        var dbName = client.db(db_name)
+        var colName = dbName.collection(collection_name)
 
         var empId = parseInt(request.params.empId)
         var searchObj = {empId: empId}
@@ -63,8 +65,8 @@ exports.getEmployee = async (request, response, next) => {
 exports.addEmployee = async (request, response, next) => {
     try {
         var client = await mongoClient.connect()
-        var dbName = client.db("dxcDB")
-        var colName = dbName.collection("emp")
+        var dbName = client.db(db_name)
+        var colName = dbName.collection(collection_name)
 
         colName.insertOne(request.body)
             .then(res => {
@@ -85,8 +87,8 @@ exports.addEmployee = async (request, response, next) => {
 exports.updateEmployee = async (request, response, next) => {
     try {
         var client = await mongoClient.connect()
-        var dbName = client.db("dxcDB")
-        var colName = dbName.collection("emp")
+        var dbName = client.db(db_name)
+        var colName = dbName.collection(collection_name)
 
         var body = request.body
         var filterObj = {empId: parseInt(request.params.empId)}
@@ -122,8 +124,8 @@ exports.updateEmployee = async (request, response, next) => {
 exports.deleteEmployee = async (request, response, next) => {
     try {
         var client = await mongoClient.connect()
-        var dbName = client.db("dxcDB")
-        var colName = dbName.collection("emp")
+        var dbName = client.db(db_name)
+        var colName = dbName.collection(collection_name)
 
         var filterObj = {empId: parseInt(request.params.empId)}
         colName.deleteMany(filterObj)

@@ -4,6 +4,7 @@ const path = require("path")
 const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const fs = require("fs")
+const cors = require('cors')
 
 const employeesRouter = require("./routes/employees.routes")
 
@@ -21,6 +22,8 @@ app.use((request, response, next) => {
     request.rootDirName = __dirname
     next()
 })
+
+app.use(cors())
 
 app.use("/employees", employeesRouter)
 

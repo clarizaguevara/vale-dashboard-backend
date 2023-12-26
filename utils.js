@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken")
+const mySQLClient = require("mysql2/promise")
 
-function validateToken(request,response,next) {
+exports.validateToken = (request, response, next)  => {
     const authorizationHeader = request.headers.authorization
     if (authorizationHeader) {
         const token = authorizationHeader.split(" ")[1] // Bearer <token>
@@ -22,4 +23,11 @@ function validateToken(request,response,next) {
 
 }
 
-module.exports = {validateToken}
+exports.connectionRequest = () => {
+    return mySQLClient.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
+    })
+}

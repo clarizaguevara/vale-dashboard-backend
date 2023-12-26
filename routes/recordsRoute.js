@@ -1,11 +1,11 @@
-var express = require("express")
+const express = require("express")
 const morgan = require("morgan")
 const path = require("path")
 const fs = require("fs")
-var empController = require("../controllers/empController")
+const recordsController = require("../controllers/recordsController")
 const {validateToken} = require("../utils")
 
-var router = express.Router()
+const router = express.Router()
 
 router.use(validateToken)
 
@@ -16,11 +16,7 @@ router.use((request,response,next) => {
     next()
 })
 
-// /employees
-router.get("/", empController.getAll)
-router.get("/:empId", empController.getEmployee)
-router.post("/", empController.addEmployee)
-router.put("/:empId", empController.updateEmployee)
-router.delete("/:empId", empController.deleteEmployee)
+router.get("/", recordsController.getRecord)
+router.post("/", recordsController.addRecord)
 
 module.exports = router

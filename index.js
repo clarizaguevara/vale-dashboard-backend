@@ -6,13 +6,13 @@ const morgan = require("morgan")
 const fs = require("fs")
 const cors = require('cors')
 
-const employeesRouter = require("./routes/employees.routes")
+const recordsRouter = require("./routes/recordsRoute")
 
 const port = 3000
 
-var wStream = fs.createWriteStream(path.join(__dirname,"log", "serverLog.txt"), {flags:"a"})
+const wStream = fs.createWriteStream(path.join(__dirname,"log", "serverLog.txt"), {flags:"a"})
 
-var app = express()
+const app = express()
 
 app.use(morgan("combined", {stream:wStream}))
 app.use(bodyParser.urlencoded({extended:false}))
@@ -25,7 +25,7 @@ app.use((request, response, next) => {
 
 app.use(cors())
 
-app.use("/employees", employeesRouter)
+app.use("/records", recordsRouter)
 
 app.listen(port, () => {
     console.log(`Server started at port : ${port}`)

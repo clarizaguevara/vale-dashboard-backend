@@ -55,7 +55,7 @@ exports.getRecord = async (request, response, next) => {
 
     } catch (err) {
         console.error('Error executing query: ', err)
-        response.status(500).send({ error: err })
+        response.status(500).send({ error: err.message })
     }
 }
 
@@ -81,7 +81,7 @@ exports.addRecord = async (request, response, next) => {
 
     } catch (err) {
         console.error('Error executing query: ', err)
-        response.status(500).send({ error: err })
+        response.status(500).send({ error: err.message })
     }
 }
 

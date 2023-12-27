@@ -5,24 +5,32 @@ exports.getRecord = async (request, response, next) => {
         const connection = await connectionRequest()
         const param = request.query
         
-        var sqlQuery = `SELECT CONCAT(
+        var sqlQuery = `SELECT m.person_id,
+                CONCAT(
                     p.first_name,
                     IF(LENGTH(p.middle_name) > 0, CONCAT(' ', p.middle_name), ''),
                     ' ',
                     p.last_name
                 ) AS person_name,
-                m.date_of_access, m.time_of_access, l.location_name, m.temperature
+                m.date_of_access, m.time_of_access, m.location_id, l.location_name, m.temperature
             FROM main_record m
             JOIN person p ON m.person_id = p.person_id
             JOIN location l ON m.location_id = l.location_id `
 
         if (param.searchBy && param.searchKey) {
+            if (param.searchBy.toLowerCase() === "person_id") {
+                sqlQuery += `WHERE m.person_id LIKE '%${param.searchKey}%' `
+            }
             if (param.searchBy.toLowerCase() === "name") {
                 sqlQuery += `WHERE CONCAT(p.first_name, ' ', p.middle_name, ' ', p.last_name) LIKE '%${param.searchKey}%' `
             }
 
             if (param.searchBy.toLowerCase() === "date_of_access") {
                 sqlQuery += `WHERE m.date_of_access = '${param.searchKey}' `
+            }
+
+            if (param.searchBy.toLowerCase() === "location_id") {
+                sqlQuery += `WHERE m.location_id LIKE '%${param.searchKey}%' `
             }
 
             if (param.searchBy.toLowerCase() === "location") {

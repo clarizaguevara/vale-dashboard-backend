@@ -7,10 +7,10 @@ exports.getRecord = async (request, response, next) => {
         
         var sqlQuery = `SELECT m.person_id,
                 CONCAT(
+                    p.last_name,
+                    ', ',
                     p.first_name,
-                    IF(LENGTH(p.middle_name) > 0, CONCAT(' ', p.middle_name), ''),
-                    ' ',
-                    p.last_name
+                    IF(LENGTH(p.middle_name) > 0, CONCAT(' ', p.middle_name), '')
                 ) AS person_name,
                 m.date_of_access, m.time_of_access, m.location_id, l.location_name, m.temperature
             FROM main_record m
@@ -38,7 +38,12 @@ exports.getRecord = async (request, response, next) => {
             }
         }
 
-        sqlQuery += `ORDER BY ${param.orderBy || 'date_of_access'} ${param.order || 'DESC'} `
+        var orderBy = "date_of_access DESC, time_of_access DESC, person_name DESC"
+        if (param.orderBy && param.order) {
+            orderBy = `${param.orderBy} ${param.order}`
+        }
+        sqlQuery += `ORDER BY ${orderBy} `
+
         sqlQuery += `LIMIT 20 `
 
         if (param.page) {

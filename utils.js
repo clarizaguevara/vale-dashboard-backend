@@ -1,12 +1,32 @@
 const jwt = require("jsonwebtoken")
 const mySQLClient = require("mysql2/promise")
 
+exports.generateAccessToken = (request, response, next) => {
+    const username = {username: "cguevara6"}
+    const secret = process.env.SECRET_KEY
+    const options = {
+        expiresIn: "2d", 
+        issuer: process.env.ENVIRONMENT === 'local' ? "http://localhost" : `https://${request.hostname}`
+    }
+    jwt.sign(username, secret, options, (err, result) => {
+        if (err) {
+            response.status(402).send({err: err})
+        }
+        else {
+            response.status(200).send({token: result})
+        }
+    })
+}
+
 exports.validateToken = (request, response, next)  => {
     const authorizationHeader = request.headers.authorization
     if (authorizationHeader) {
         const token = authorizationHeader.split(" ")[1] // Bearer <token>
         const secret = process.env.SECRET_KEY
-        const options = {/*expiresIn:"2d",*/issuer:"http://localhost"}
+        const options = {
+            expiresIn: "2d", 
+            issuer: process.env.ENVIRONMENT === 'local' ? "http://localhost" : /ngrok-free\.app*/
+        }
         jwt.verify(token, secret, options, (err, result) => {
             if (err) {
                 response.status(402).send({err:err})

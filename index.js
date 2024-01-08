@@ -7,8 +7,9 @@ const fs = require("fs")
 const cors = require('cors')
 
 const recordsRouter = require("./routes/recordsRoute")
+const {generateAccessToken} = require("./utils")
 
-const port = 3000
+const port = process.env.PORT
 
 const wStream = fs.createWriteStream(path.join(__dirname,"log", "serverLog.txt"), {flags:"a"})
 
@@ -26,6 +27,7 @@ app.use((request, response, next) => {
 app.use(cors())
 
 app.use("/records", recordsRouter)
+app.get("/token", generateAccessToken)
 
 app.listen(port, () => {
     console.log(`Server started at port : ${port}`)

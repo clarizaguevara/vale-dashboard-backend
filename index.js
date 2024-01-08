@@ -7,6 +7,8 @@ const fs = require("fs")
 const cors = require('cors')
 
 const recordsRouter = require("./routes/recordsRoute")
+const personRouter = require("./routes/personRoute")
+const locationRouter = require("./routes/locationRoute")
 const {generateAccessToken} = require("./utils")
 
 const port = process.env.PORT
@@ -27,6 +29,8 @@ app.use((request, response, next) => {
 app.use(cors())
 
 app.use("/records", recordsRouter)
+app.use("/person", personRouter)
+app.use("/location", locationRouter)
 app.get("/token", generateAccessToken)
 
 app.listen(port, () => {

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 const mySQLClient = require("mysql2/promise")
+const fs = require("fs")
 
 exports.generateAccessToken = (request, response, next) => {
     const username = {username: "cguevara6"}
@@ -50,5 +51,9 @@ exports.connectionRequest = () => {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         dateStrings: true,
+        ssl : {
+            ca : fs.readFileSync(__dirname + '/ca.pem'),
+            rejectUnauthorized: false
+        }
     })
 }

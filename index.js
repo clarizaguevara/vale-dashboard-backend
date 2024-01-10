@@ -11,7 +11,7 @@ const personRouter = require("./routes/personRoute")
 const locationRouter = require("./routes/locationRoute")
 const {generateAccessToken} = require("./utils")
 
-const port = process.env.PORT
+const port = process.env.PORT || 3000
 
 const wStream = fs.createWriteStream(path.join(__dirname,"log", "serverLog.txt"), {flags:"a"})
 

@@ -25,7 +25,7 @@ exports.validateToken = (request, response, next)  => {
         const secret = process.env.SECRET_KEY
         const options = {
             expiresIn: "2d", 
-            issuer: process.env.ENVIRONMENT === 'local' ? "http://localhost" : /ngrok-free\.app*/
+            issuer: process.env.ENVIRONMENT === 'local' ? "http://localhost" : /vale*/
         }
         jwt.verify(token, secret, options, (err, result) => {
             if (err) {

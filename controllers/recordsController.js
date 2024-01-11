@@ -44,7 +44,7 @@ exports.getRecord = async (request, response, next) => {
         }
         sqlQuery += `ORDER BY ${orderBy} `
 
-        sqlQuery += `LIMIT 20 `
+        sqlQuery += `LIMIT 10 `
 
         if (param.page) {
             sqlQuery += `OFFSET ${(param.page - 1) * 20}`

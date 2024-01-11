@@ -64,6 +64,7 @@ exports.getRecord = async (request, response, next) => {
             statusCode = 202
         }
 
+        connection.close()
         response.status(statusCode).send(msgObj)
 
     } catch (err) {
@@ -90,6 +91,7 @@ exports.addRecord = async (request, response, next) => {
             statusCode = 500
         }
 
+        connection.close()
         response.status(statusCode).send(msgObj)
 
     } catch (err) {

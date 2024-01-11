@@ -37,6 +37,7 @@ exports.getPerson = async (request, response, next) => {
             statusCode = 202
         }
 
+        connection.close()
         response.status(statusCode).send(msgObj)
 
     } catch (err) {
@@ -63,6 +64,7 @@ exports.addPerson = async (request, response, next) => {
             statusCode = 500
         }
 
+        connection.close()
         response.status(statusCode).send(msgObj)
 
     } catch (err) {
@@ -91,6 +93,7 @@ exports.updatePerson = async (request, response, next) => {
             statusCode = 500
         }
 
+        connection.close()
         response.status(statusCode).send(msgObj)
 
     } catch (err) {
@@ -118,6 +121,7 @@ exports.deletePerson = async (request, response, next) => {
             statusCode = 500
         }
 
+        connection.close()
         response.status(statusCode).send(msgObj)
 
     } catch (err) {

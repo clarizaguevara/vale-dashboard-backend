@@ -7,7 +7,7 @@ const {validateToken} = require("../utils")
 
 const router = express.Router()
 
-if (process.env.AUTHENTICATION) {
+if (process.env.AUTHENTICATION === true) {
     router.use(validateToken)
 }
 

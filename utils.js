@@ -45,13 +45,13 @@ exports.validateToken = (request, response, next)  => {
 }
 
 exports.connectionRequest = () => {
-    var dbObj = {
+    var dbObj = JSON.parse({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         dateStrings: true
-    }
+    })
     if (process.env.DATABASE_ENV !== 'local') {
         dbObj.push({
             port: process.env.DB_PORT,

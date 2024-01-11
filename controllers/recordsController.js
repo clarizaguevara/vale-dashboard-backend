@@ -21,7 +21,7 @@ exports.getRecord = async (request, response, next) => {
             if (param.searchBy.toLowerCase() === "person_id") {
                 sqlQuery += `WHERE m.person_id LIKE '%${param.searchKey}%' `
             }
-            if (param.searchBy.toLowerCase() === "name") {
+            if (param.searchBy.toLowerCase() === "person_name") {
                 sqlQuery += `WHERE CONCAT(p.first_name, ' ', p.middle_name, ' ', p.last_name) LIKE '%${param.searchKey}%' `
             }
 

@@ -47,18 +47,20 @@ exports.getRecord = async (request, response, next) => {
         sqlQuery += `LIMIT 10 `
 
         if (param.page) {
-            sqlQuery += `OFFSET ${(param.page - 1) * 20}`
+            sqlQuery += `OFFSET ${(param.page - 1) * 10}`
         }
 
         console.log(sqlQuery)
 
         const [results] = await connection.query(sqlQuery)
+        const [totalRecords] = await connection.query("SELECT COUNT(*) as count FROM main_record")
 
         var msgObj = {}
         var statusCode = 200
 
         if (results !== null) {
-            msgObj = results
+            msgObj.totalRecords = totalRecords[0].count
+            msgObj.results = results
         } else {
             msgObj = { msg: "Record not found." }
             statusCode = 202

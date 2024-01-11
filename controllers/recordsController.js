@@ -33,7 +33,7 @@ exports.getRecord = async (request, response, next) => {
                 sqlQuery += `WHERE m.location_id LIKE '%${param.searchKey}%' `
             }
 
-            if (param.searchBy.toLowerCase() === "location") {
+            if (param.searchBy.toLowerCase() === "location_name") {
                 sqlQuery += `WHERE l.location_name LIKE '%${param.searchKey}%' `
             }
         }

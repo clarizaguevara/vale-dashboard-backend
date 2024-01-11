@@ -13,18 +13,19 @@ const {generateAccessToken} = require("./utils")
 
 const port = process.env.PORT || 3000
 
-const wStream = fs.createWriteStream(path.join(__dirname,"log", "serverLog.txt"), {flags:"a"})
-
 const app = express()
 
-app.use(morgan("combined", {stream:wStream}))
+if (process.env.LOG === true) {
+    const wStream = fs.createWriteStream(path.join(__dirname,"log", "serverLog.txt"), {flags:"a"})
+    app.use(morgan("combined", {stream:wStream}))
+    app.use((request, response, next) => {
+        request.rootDirName = __dirname
+        next()
+    })
+}
+
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
-
-app.use((request, response, next) => {
-    request.rootDirName = __dirname
-    next()
-})
 
 app.use(cors())
 

@@ -45,21 +45,20 @@ exports.validateToken = (request, response, next)  => {
 }
 
 exports.connectionRequest = () => {
-    var dbObj = JSON.parse({
+    var dbParam = {
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         dateStrings: true
-    })
-    if (process.env.DATABASE_ENV !== 'local') {
-        dbObj.push({
-            port: process.env.DB_PORT,
-            ssl : {
-                ca : fs.readFileSync(__dirname + '/ca.pem'),
-                rejectUnauthorized: false
-            }
-        })
     }
-    return mySQLClient.createConnection(dbObj)
+    if (process.env.DATABASE_ENV !== 'local') {
+        dbParam.port= process.env.DB_PORT
+        dbParam.ssl = {
+            ca : fs.readFileSync(__dirname + '/ca.pem'),
+            rejectUnauthorized: false
+        }
+        
+    }
+    return mySQLClient.createConnection(dbParam)
 }

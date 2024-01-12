@@ -5,42 +5,53 @@ exports.getRecord = async (request, response, next) => {
         const connection = await connectionRequest()
         const param = request.query
         
-        var sqlQuery = `SELECT m.person_id,
+        const sqlQuerySelect = `SELECT m.person_id,
                 CONCAT(
                     p.last_name,
                     ', ',
                     p.first_name,
                     IF(LENGTH(p.middle_name) > 0, CONCAT(' ', p.middle_name), '')
                 ) AS person_name,
-                m.date_of_access, m.time_of_access, m.location_id, l.location_name, m.temperature
-            FROM main_record m
+                m.date_of_access, m.time_of_access, m.location_id, l.location_name, m.temperature `
+        const sqlCountSelect = `SELECT COUNT(*) as count `
+        const sqlFrom = `FROM main_record m
             JOIN person p ON m.person_id = p.person_id
             JOIN location l ON m.location_id = l.location_id `
 
+        var sqlQuery = sqlQuerySelect + sqlFrom
+        var sqlCount = sqlCountSelect + sqlFrom
+
         if (param.searchBy && param.searchKey) {
+            var sqlWhere = ""
             if (param.searchBy.toLowerCase() === "person_id") {
-                sqlQuery += `WHERE m.person_id LIKE '%${param.searchKey}%' `
+                sqlWhere = `WHERE m.person_id LIKE '%${param.searchKey}%' `
             }
             if (param.searchBy.toLowerCase() === "person_name") {
-                sqlQuery += `WHERE CONCAT(p.first_name, ' ', p.middle_name, ' ', p.last_name) LIKE '%${param.searchKey}%' `
+                sqlWhere = `WHERE CONCAT(p.first_name, ' ', p.middle_name, ' ', p.last_name) LIKE '%${param.searchKey}%' `
             }
 
             if (param.searchBy.toLowerCase() === "date_of_access") {
-                sqlQuery += `WHERE m.date_of_access = '${param.searchKey}' `
+                sqlWhere = `WHERE m.date_of_access = '${param.searchKey}' `
             }
 
             if (param.searchBy.toLowerCase() === "location_id") {
-                sqlQuery += `WHERE m.location_id LIKE '%${param.searchKey}%' `
+                sqlWhere = `WHERE m.location_id LIKE '%${param.searchKey}%' `
             }
 
             if (param.searchBy.toLowerCase() === "location_name") {
-                sqlQuery += `WHERE l.location_name LIKE '%${param.searchKey}%' `
+                sqlWhere = `WHERE l.location_name LIKE '%${param.searchKey}%' `
             }
+            sqlQuery += sqlWhere
+            sqlCount += sqlWhere
         }
 
         var orderBy = "date_of_access DESC, time_of_access DESC, person_name DESC"
         if (param.orderBy && param.order) {
-            orderBy = `${param.orderBy} ${param.order}`
+            if (param.orderBy === "date_of_access") {
+                orderBy = `date_of_access ${param.order}, time_of_access DESC`
+            } else {
+                orderBy = `${param.orderBy} ${param.order}`
+            }
         }
         sqlQuery += `ORDER BY ${orderBy} `
 
@@ -51,9 +62,10 @@ exports.getRecord = async (request, response, next) => {
         }
 
         console.log(sqlQuery)
+        console.log(sqlCount)
 
         const [results] = await connection.query(sqlQuery)
-        const [totalRecords] = await connection.query("SELECT COUNT(*) as count FROM main_record")
+        const [totalRecords] = await connection.query(sqlCount)
 
         var msgObj = {}
         var statusCode = 200
